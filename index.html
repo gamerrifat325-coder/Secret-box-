@@ -2,334 +2,291 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Birthday Surprise</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SURPRISE!! 🎁</title>
+<meta name="description" content="A little surprise for my best friend ❤️">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SURPRISE!! 🎁">
+<meta property="og:description" content="A little surprise for my best friend ❤️">
+<meta property="og:url" content="https://gamerrifat325-coder.github.io/Secret-box/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SURPRISE!! 🎁">
+<meta name="twitter:description" content="A little surprise for my best friend ❤️">
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{box-sizing:border-box}
+body{
+ margin:0;background:linear-gradient(135deg,#fff0f5,#ffe0eb);
+ font-family:Arial,sans-serif;color:#35232c;text-align:center
 }
-
-body {
-    font-family: Arial, sans-serif;
-    background: #fff5f8;
-    color: #d63384;
-    min-height: 100vh;
-    overflow-x: hidden;
+main{max-width:600px;margin:auto;padding:18px 12px}
+.card{
+ background:white;border-radius:22px;padding:22px 15px;
+ margin:12px 0;box-shadow:0 8px 30px #8f304015
 }
-
-.screen {
-    display: none;
-    min-height: 100vh;
-    padding: 24px;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
+h1{color:#e63946;font-size:25px}
+p{line-height:1.5}
+button{
+ background:#e63946;color:white;border:0;border-radius:13px;
+ padding:14px 18px;font-size:16px;font-weight:bold;
+ box-shadow:0 4px 0 #b42332;cursor:pointer;margin:6px
 }
-
-.screen.active {
-    display: flex;
-    animation: fade .6s ease;
-}
-
-@keyframes fade {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.card {
-    width: 100%;
-    max-width: 380px;
-    padding: 35px 24px;
-    background: white;
-    border-radius: 24px;
-    box-shadow: 0 10px 40px #e7548015;
-}
-
-.emoji {
-    font-size: 60px;
-    margin-bottom: 22px;
-}
-
-h1 {
-    font-size: 32px;
-    margin-bottom: 16px;
-    color: #e84393;
-}
-
-p {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #8f526d;
-    white-space: pre-line;
-}
-
-button {
-    border: none;
-    background: #f45b9a;
-    color: white;
-    padding: 14px 22px;
-    border-radius: 30px;
-    font-size: 15px;
-    cursor: pointer;
-    margin-top: 24px;
-    transition: .2s;
-}
-
-button:hover {
-    background: #e84393;
-    transform: translateY(-2px);
-}
-
-.options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 20px;
-}
-
-.options button {
-    width: 100%;
-    margin: 0;
-}
-
-#effects {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 10;
-}
-
-.spark {
-    position: absolute;
-    font-size: 24px;
-    animation: explode 1.8s ease-out forwards;
-}
-
-@keyframes explode {
-    0% {
-        transform: scale(.2);
-        opacity: 0;
-    }
-    30% { opacity: 1; }
-    100% {
-        transform: scale(2) rotate(160deg);
-        opacity: 0;
-    }
-}
-
-.confetti {
-    position: fixed;
-    top: -30px;
-    pointer-events: none;
-    animation: fall 3s linear forwards;
-}
-
-@keyframes fall {
-    to {
-        transform: translateY(110vh) rotate(600deg);
-        opacity: 0;
-    }
-}
-
-.heart {
-    position: fixed;
-    bottom: -30px;
-    pointer-events: none;
-    animation: float 6s linear forwards;
-}
-
-@keyframes float {
-    to {
-        transform: translateY(-110vh);
-        opacity: 0;
-    }
-}
-
+button:active{transform:translateY(2px)}
+.hidden{display:none!important}
+#arena{height:210px;position:relative;margin:10px 0}
+#runBtn{position:absolute;left:50%;top:65px;transform:translateX(-50%);white-space:nowrap}
+.muted{font-size:13px;color:#888}
+.stats{display:flex;justify-content:space-between;gap:8px;font-weight:bold}
+.bar{height:13px;background:#eee;border-radius:10px;overflow:hidden;margin:8px 0}
+.fill{height:100%;transition:width .15s}
+#playerFill{background:#2ecc71;width:100%}
+#enemyFill{background:#e63946;width:100%}
+#healthPanel{padding:10px;border:1px solid #f1d9e1;border-radius:12px;cursor:pointer}
+#game{display:block;width:100%;height:auto;background:#17192d;border-radius:15px;margin:12px 0;touch-action:manipulation}
+#message{min-height:42px;color:#d63350;font-weight:bold}
+#controls{display:flex;flex-wrap:wrap;justify-content:center}
+#controls button{flex:1;min-width:90px}
+#gift{font-size:90px;display:inline-block;cursor:pointer;transition:transform .2s}
+#flash{position:fixed;inset:0;background:white;opacity:0;pointer-events:none;z-index:10}
+#bear{font-size:110px;animation:pop .7s}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes flash{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
 </style>
 </head>
-
 <body>
+<div id="flash"></div>
+<main>
 
-<div id="effects"></div>
-
-<!-- FIRST PAGE -->
-<section class="screen active" id="first">
-    <div class="card">
-        <div class="emoji">🎀</div>
-        <h1>A Little Surprise</h1>
-        <p>Someone has something special for you.</p>
-        <button onclick="celebrate()">Do you want to see this?</button>
-    </div>
+<section id="welcome" class="card">
+ <h1>For You, My Best Friend ❤️</h1>
+ <p>A tiny challenge awaits you... 👀</p>
+ <div id="arena">
+  <button id="runBtn" onclick="clickRun()">For You, My Best Friend ❤️</button>
+ </div>
+ <p id="clickInfo" class="muted">Click the button 5 times!</p>
 </section>
 
-<!-- BIRTHDAY PAGE -->
-<section class="screen" id="birthday">
-    <div class="card">
-        <div class="emoji">🎂</div>
-        <h1>Happy Birthday!</h1>
-        <p>Today is your special day. 💗
-
-May your life be filled with love,
-happiness and beautiful memories.</p>
-        <button onclick="openOptions()">Open Your Surprise</button>
-    </div>
+<section id="ready" class="card hidden">
+ <h1>🎉 Task Complete!</h1>
+ <p>Well done! Ready for the real challenge?</p>
+ <button onclick="startGame()">Are You Ready?</button>
 </section>
 
-<!-- OPTIONS PAGE -->
-<section class="screen" id="options">
-    <div class="card">
-        <div class="emoji">💌</div>
-        <h1>Choose One</h1>
-        <p>A little message, just for you.</p>
+<section id="battle" class="card hidden">
+ <h1>⚔️ SURVIVAL GAME</h1>
+ <div class="stats"><span id="wave">Enemy 1 / 11</span><span id="score">Defeated: 0</span></div>
 
-        <div class="options">
-            <button onclick="showWish(0)">A Special Wish 💗</button>
-            <button onclick="showWish(1)">From My Heart 💌</button>
-            <button onclick="showWish(2)">One More Surprise 🎀</button>
-        </div>
-    </div>
+ <div id="healthPanel" onclick="useMedkit()">
+  <div class="stats"><span>❤️ Your Health</span><span id="hpText">10 / 10</span></div>
+  <div class="bar"><div class="fill" id="playerFill"></div></div>
+  <p class="muted">Tap your health bar to inspect it.</p>
+ </div>
+
+ <div class="stats"><span id="enemyName">Enemy</span><span id="enemyText">1 / 1 HP</span></div>
+ <div class="bar"><div class="fill" id="enemyFill"></div></div>
+
+ <canvas id="game" width="500" height="270"></canvas>
+ <p id="message">Shoot the enemy to defeat it!</p>
+
+ <div id="controls">
+  <button onclick="shoot()">🔫 SHOOT</button>
+  <button onclick="movePlayer(-1)">⬅️ MOVE</button>
+  <button onclick="movePlayer(1)">MOVE ➡️</button>
+ </div>
 </section>
 
-<!-- WISH PAGE -->
-<section class="screen" id="wish">
-    <div class="card">
-        <div class="emoji" id="wishEmoji">💗</div>
-        <h1 id="wishTitle">A Special Wish</h1>
-        <p id="wishText"></p>
-        <button onclick="back()">Go Back</button>
-    </div>
+<section id="victory" class="card hidden">
+ <h1>🏆 VICTORY!</h1>
+ <p>You defeated all 11 enemies!</p>
+ <button onclick="showGift()">Click Here Now!!</button>
 </section>
+
+<section id="giftSection" class="card hidden">
+ <h1>Surprise Box 🎁</h1>
+ <p id="giftPrompt">Click the box 3 times to open your surprise!</p>
+ <div id="gift" onclick="clickGift()">🎁</div>
+ <p id="giftClicks">Clicks: 0 / 3</p>
+ <div id="final" class="hidden">
+  <div id="bear">🐻🖕</div>
+  <h1>Kaisa hai mere pyare dost bhangaar wala!! 😂</h1>
+  <p>Best friends forever! ❤️</p>
+  <button onclick="location.reload()">Play Again 🔄</button>
+ </div>
+</section>
+
+</main>
 
 <script>
-const messages = [
-    {
-        emoji: "💗",
-        title: "A Special Wish",
-        text: `Happy Birthday! 🎂
+const $=id=>document.getElementById(id);
+let firstClicks=0;
+let enemy=1,kills=0,playerHP=10,enemyHP=1,enemyMax=1;
+let bossDeaths=0,medkitUsed=false,hintShown=false,gameOver=false;
+let giftCount=0,playerX=250,invulnerable=false;
 
-May every day of your life bring you
-new reasons to smile. May your dreams
-come true and your heart always be
-filled with happiness.
+const canvas=$('game'),ctx=canvas.getContext('2d');
 
-You deserve all the beautiful things
-life has to offer. Stay happy, keep
-smiling and always shine. 💕`
-    },
-    {
-        emoji: "💌",
-        title: "From My Heart",
-        text: `Today is all about you. 🌸
+function clickRun(){
+ firstClicks++;
+ $('clickInfo').textContent=`Clicks: ${firstClicks} / 5`;
+ const b=$('runBtn');
 
-I hope this new chapter brings you
-peace, happiness and countless
-beautiful memories.
-
-May you always be surrounded by
-people who appreciate you, moments
-that make you smile, and dreams
-that inspire you.
-
-Happy Birthday, once again! 💗`
-    },
-    {
-        emoji: "🎀",
-        title: "One More Surprise",
-        text: `Here's a little reminder for you. 💖
-
-You deserve happiness not just today,
-but every single day of the year.
-
-May your life be full of laughter,
-wonderful surprises and lovely
-memories that stay with you forever.
-
-Have the most beautiful birthday! 🎂`
-    }
-];
-
-function changePage(id) {
-    document.querySelectorAll(".screen").forEach(page => {
-        page.classList.remove("active");
-    });
-    document.getElementById(id).classList.add("active");
+ if(firstClicks<5){
+  b.textContent='Click 5 Times 😂';
+  b.style.left=(3+Math.random()*68)+'%';
+  b.style.top=(Math.random()*145)+'px';
+  b.style.transform='none';
+ }else{
+  $('welcome').classList.add('hidden');
+  $('ready').classList.remove('hidden');
+ }
 }
 
-function celebrate() {
-    changePage("birthday");
-
-    for (let i = 0; i < 45; i++) {
-        setTimeout(makeSpark, i * 70);
-    }
-
-    for (let i = 0; i < 65; i++) {
-        setTimeout(makeConfetti, i * 40);
-    }
+function startGame(){
+ $('ready').classList.add('hidden');
+ $('battle').classList.remove('hidden');
+ enemy=1;kills=0;playerHP=10;bossDeaths=0;
+ medkitUsed=false;hintShown=false;gameOver=false;
+ invulnerable=false;playerX=250;
+ nextEnemy();
 }
 
-function makeSpark() {
-    const el = document.createElement("div");
-    el.className = "spark";
-    el.textContent = ["🎆", "✨", "💖", "🎉"][
-        Math.floor(Math.random() * 4)
-    ];
-    el.style.left = Math.random() * 95 + "vw";
-    el.style.top = Math.random() * 85 + "vh";
-
-    document.getElementById("effects").appendChild(el);
-    setTimeout(() => el.remove(), 1900);
+function nextEnemy(){
+ if(enemy>11){finishGame();return}
+ enemyMax=enemy===11?100:1;
+ enemyHP=enemyMax;
+ $('message').textContent=enemy===11
+  ?'FINAL BOSS! 100 HP. Each shot deals 1 damage to the boss and 0.1 damage to you.'
+  :'Enemy incoming! One bullet defeats this enemy.';
+ updateUI();drawGame();
 }
 
-function makeConfetti() {
-    const el = document.createElement("div");
-    el.className = "confetti";
-    el.textContent = ["🎊", "✨", "💕", "🎉"][
-        Math.floor(Math.random() * 4)
-    ];
-    el.style.left = Math.random() * 100 + "vw";
-    el.style.animationDuration = (2 + Math.random() * 2) + "s";
-
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 4500);
+function updateUI(){
+ $('wave').textContent=`Enemy ${enemy} / 11`;
+ $('score').textContent=`Defeated: ${kills}`;
+ $('hpText').textContent=`${playerHP.toFixed(1)} / 10`;
+ $('playerFill').style.width=(playerHP*10)+'%';
+ $('enemyName').textContent=enemy===11?'👹 FINAL BOSS':'👾 Enemy '+enemy;
+ $('enemyText').textContent=`${enemyHP} / ${enemyMax} HP`;
+ $('enemyFill').style.width=(enemyHP/enemyMax*100)+'%';
 }
 
-function openOptions() {
-    changePage("options");
+function shoot(){
+ if(gameOver||playerHP<=0)return;
+
+ enemyHP=Math.max(0,enemyHP-1);
+
+ // Only the boss deals damage
+ if(enemy===11&&!invulnerable){
+  playerHP=Math.max(0,Math.round((playerHP-.1)*10)/10);
+ }
+
+ if(enemy===11&&playerHP<=0){
+  bossDeaths++;
+  invulnerable=true;
+  if(bossDeaths>=5&&!hintShown){
+   hintShown=true;
+   $('message').textContent='Hint: Click your health bar to recover your health!';
+  }else{
+   $('message').textContent='You got knocked out! Tap the health bar to recover.';
+  }
+  updateUI();drawGame();
+  return;
+ }
+
+ if(enemyHP<=0){
+  kills++;enemy++;
+  nextEnemy();
+ }else{
+  $('message').textContent=enemy===11
+   ?'Keep shooting! The boss is tough!'
+   :'Nice shot!';
+  updateUI();drawGame();
+ }
 }
 
-function showWish(index) {
-    document.getElementById("wishEmoji").textContent =
-        messages[index].emoji;
-    document.getElementById("wishTitle").textContent =
-        messages[index].title;
-    document.getElementById("wishText").textContent =
-        messages[index].text;
+function useMedkit(){
+ if(enemy!==11||gameOver)return;
 
-    changePage("wish");
+ if(invulnerable){
+  invulnerable=false;
+  playerHP=10;
+  $('message').textContent='🩹 HEALTH RESTORED! Back to full health!';
+ }else if(!medkitUsed){
+  medkitUsed=true;
+  playerHP=Math.min(10,playerHP+5);
+  $('message').textContent='🩹 MEDKIT FOUND! 5 health restored!';
+ }else{
+  $('message').textContent='Your medkit has already been used!';
+ }
+ updateUI();drawGame();
 }
 
-function back() {
-    changePage("options");
+function movePlayer(dir){
+ if(gameOver||playerHP<=0)return;
+ playerX=Math.max(25,Math.min(475,playerX+dir*25));
+ drawGame();
 }
 
-// Subtle floating hearts
-setInterval(() => {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.textContent = "♡";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = (18 + Math.random() * 12) + "px";
-    heart.style.color = "#f45b9a";
+function drawGame(){
+ ctx.clearRect(0,0,500,270);
+ ctx.fillStyle='#17192d';ctx.fillRect(0,0,500,270);
 
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 6500);
-}, 1200);
+ ctx.strokeStyle='#292d49';
+ for(let x=0;x<500;x+=25){
+  ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,270);ctx.stroke();
+ }
+ for(let y=0;y<270;y+=25){
+  ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(500,y);ctx.stroke();
+ }
+
+ // Player character and toy gun
+ ctx.fillStyle='#55d8ff';ctx.fillRect(playerX-13,213,26,28);
+ ctx.fillStyle='white';ctx.fillRect(playerX-8,219,5,5);ctx.fillRect(playerX+3,219,5,5);
+ ctx.fillStyle='#ffda77';ctx.fillRect(playerX-3,198,6,15);
+ ctx.fillStyle='#c8d2e8';ctx.fillRect(playerX-3,191,6,12);
+
+ // Enemy
+ ctx.fillStyle=enemy===11?'#ff385d':'#a78bfa';
+ ctx.beginPath();ctx.arc(250,72,enemy===11?35:22,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle='white';ctx.fillRect(241,66,5,6);ctx.fillRect(254,66,5,6);
+ ctx.fillStyle='#17192d';ctx.fillRect(242,81,16,4);
+ ctx.fillStyle='white';ctx.textAlign='center';ctx.font='bold 14px Arial';
+ ctx.fillText(enemy===11?'FINAL BOSS':'ENEMY '+enemy,250,124);
+ if(enemy===11)ctx.fillText('HP: '+enemyHP,250,148);
+}
+
+function finishGame(){
+ gameOver=true;
+ $('battle').classList.add('hidden');
+ $('victory').classList.remove('hidden');
+}
+
+function showGift(){
+ $('victory').classList.add('hidden');
+ $('giftSection').classList.remove('hidden');
+}
+
+function clickGift(){
+ if(giftCount>=3)return;
+ giftCount++;
+ $('giftClicks').textContent=`Clicks: ${giftCount} / 3`;
+ $('gift').style.transform=`scale(${1+giftCount*.12}) rotate(${giftCount%2?7:-7}deg)`;
+
+ if(giftCount===3){
+  $('giftPrompt').textContent='Opening your surprise...';
+  $('flash').style.animation='none';
+  void $('flash').offsetWidth;
+  $('flash').style.animation='flash 1s';
+  $('gift').textContent='✨🎁✨';
+
+  setTimeout(()=>{
+   $('gift').classList.add('hidden');
+   $('giftPrompt').classList.add('hidden');
+   $('giftClicks').classList.add('hidden');
+   $('final').classList.remove('hidden');
+  },850);
+ }
+}
 </script>
-
 </body>
 </html>
