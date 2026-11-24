@@ -1,564 +1,767 @@
+import 'package:flutter/material.dart';
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#111827">
-<meta name="description" content="Free online tools for students, creators and everyone.">
-<title>Free Utility Hub | Free Online Tools</title>
-
-<style>
-:root {
-  --bg:#f4f6fb; --card:#fff; --ink:#172033;
-  --muted:#64748b; --brand:#635bff; --line:#e2e8f0;
+void main() {
+  runApp(const RTIVoiceApp());
 }
-* { box-sizing:border-box; }
-body {
-  margin:0; background:var(--bg); color:var(--ink);
-  font-family:system-ui,Arial,sans-serif; line-height:1.6;
-}
-header {
-  background:linear-gradient(130deg,#111827,#3730a3,#7c3aed);
-  color:white; padding:25px 18px 65px;
-}
-nav,main,.footer-inner { max-width:1050px; margin:auto; }
-nav { display:flex; justify-content:space-between; align-items:center; gap:12px; }
-.logo { font-weight:850; font-size:20px; }
-.pill { border:1px solid #ffffff66; border-radius:30px; padding:5px 11px; font-size:12px; }
-.hero { padding:40px 0 0; max-width:650px; }
-h1 { font-size:clamp(36px,7vw,58px); line-height:1.1; letter-spacing:-1.5px; margin:0 0 15px; }
-.hero p { color:#e0e7ff; font-size:17px; }
-main { padding:0 16px 45px; margin-top:-30px; }
-.intro {
-  background:white; border:1px solid var(--line); padding:15px 18px;
-  border-radius:14px; margin-bottom:18px; font-size:14px; color:var(--muted);
-}
-.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
-.card {
-  background:var(--card); border:1px solid var(--line); border-radius:17px;
-  padding:21px; box-shadow:0 8px 24px #17203308; min-width:0;
-}
-.icon { font-size:27px; }
-.tool-heading { display:flex; justify-content:space-between; align-items:center; gap:10px; }
-h2 { font-size:19px; margin:5px 0; }
-.desc { color:var(--muted); font-size:14px; margin:0 0 17px; }
-label { display:block; font-weight:650; font-size:14px; margin:12px 0 6px; }
-input,textarea,select {
-  font:inherit; width:100%; padding:11px; border:1px solid #cbd5e1;
-  border-radius:9px; background:white; color:var(--ink);
-}
-textarea { min-height:110px; resize:vertical; }
-button,.download {
-  display:inline-block; border:0; border-radius:9px; padding:10px 14px;
-  margin-top:12px; background:var(--brand); color:white; font:inherit;
-  font-weight:700; cursor:pointer; text-decoration:none;
-}
-button.secondary { background:#eef2ff; color:#3730a3; }
-button:disabled { opacity:.5; cursor:not-allowed; }
-button:focus-visible,a:focus-visible,input:focus-visible,
-textarea:focus-visible,select:focus-visible {
-  outline:3px solid #a5b4fc; outline-offset:2px;
-}
-.help-btn {
-  flex-shrink:0; width:31px; height:31px; padding:0; margin:0;
-  border-radius:50%; background:#eef2ff; color:#4338ca;
-  border:1px solid #c7d2fe; font-size:17px;
-}
-.result {
-  background:#f8fafc; border:1px solid var(--line); padding:12px;
-  border-radius:9px; margin-top:12px; overflow-wrap:anywhere; font-size:14px;
-}
-.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-top:12px; }
-.stat { text-align:center; background:#f8fafc; border:1px solid var(--line); border-radius:9px; padding:8px; }
-.stat strong { display:block; font-size:22px; }
-.stat span { font-size:12px; color:var(--muted); }
-.row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-#preview { max-width:100%; max-height:220px; display:block; margin:14px auto; border-radius:8px; }
-#qrOutput { display:flex; justify-content:center; margin-top:14px; }
-#qrOutput img,#qrOutput canvas { max-width:100%; height:auto; }
 
-footer { text-align:center; color:var(--muted); padding:20px 16px 35px; font-size:13px; }
+const Color red = Color(0xFFB5121B);
+const Color ink = Color(0xFF20232B);
+const Color muted = Color(0xFF7C8492);
 
-/* Tutorial popup */
-.help-overlay {
-  position:fixed; inset:0; background:#111827aa; display:none;
-  align-items:center; justify-content:center; padding:18px; z-index:9999;
-}
-.help-box {
-  background:white; color:var(--ink); padding:22px; border-radius:16px;
-  width:100%; max-width:440px; max-height:82vh; overflow-y:auto;
-  box-shadow:0 20px 60px #0003;
-}
-.help-box h2 { margin:0 0 12px; }
-.help-close { float:right; margin:0 0 10px 12px; background:#eef2ff; color:#3730a3; }
-.help-box li { margin:10px 0; }
+class RTIVoiceApp extends StatelessWidget {
+  const RTIVoiceApp({super.key});
 
-/* Review section */
-.review-stars { color:#b45309; letter-spacing:2px; }
-.review-note { color:var(--muted); font-size:12px; }
-.review-item { margin-bottom:10px; }
-.review-item p { white-space:pre-wrap; margin-bottom:0; }
-
-@media(max-width:650px) {
-  .grid { grid-template-columns:1fr; }
-  .card { padding:18px; }
-  .hero { padding-top:30px; }
-}
-</style>
-</head>
-
-<body>
-<header>
-<nav>
-  <div class="logo">✦ Free Utility Hub</div>
-  <span class="pill">100% Free Tools</span>
-</nav>
-<section class="hero">
-  <h1>Simple tools.<br>Smarter everyday.</h1>
-  <p>Useful online tools for students, creators and everyone. Fast, simple and free to use.</p>
-</section>
-</header>
-
-<main>
-<div class="intro">
-  ✨ No account required. Text and image processing happen in your browser.
-  QR generation requires an internet connection.
-</div>
-
-<section class="grid">
-
-<!-- WORD COUNTER -->
-<article class="card">
-  <div class="icon">✍️</div>
-  <div class="tool-heading">
-    <h2>Word Counter</h2>
-    <button type="button" class="help-btn" data-help="word" aria-label="Word Counter tutorial">?</button>
-  </div>
-  <p class="desc">Count words, characters and sentences instantly.</p>
-  <label for="wordsInput">Enter your text</label>
-  <textarea id="wordsInput" placeholder="Type or paste your text..."></textarea>
-  <div class="stats">
-    <div class="stat"><strong id="wordCount">0</strong><span>Words</span></div>
-    <div class="stat"><strong id="charCount">0</strong><span>Characters</span></div>
-    <div class="stat"><strong id="sentenceCount">0</strong><span>Sentences</span></div>
-  </div>
-  <div class="result">Reading time: <b id="readingTime">0 min</b></div>
-  <button class="secondary" id="clearText" type="button">Clear</button>
-</article>
-
-<!-- PERCENTAGE -->
-<article class="card">
-  <div class="icon">📊</div>
-  <div class="tool-heading">
-    <h2>Percentage Calculator</h2>
-    <button type="button" class="help-btn" data-help="percent" aria-label="Percentage Calculator tutorial">?</button>
-  </div>
-  <p class="desc">Calculate marks percentage and more.</p>
-  <div class="row">
-    <div><label for="obtained">Obtained</label><input id="obtained" type="number" placeholder="e.g. 420"></div>
-    <div><label for="total">Total marks</label><input id="total" type="number" placeholder="e.g. 500"></div>
-  </div>
-  <button id="percentageBtn" type="button">Calculate</button>
-  <div class="result" id="percentageResult" aria-live="polite">Your result will appear here.</div>
-</article>
-
-<!-- DISCOUNT -->
-<article class="card">
-  <div class="icon">🏷️</div>
-  <div class="tool-heading">
-    <h2>Discount Calculator</h2>
-    <button type="button" class="help-btn" data-help="discount" aria-label="Discount Calculator tutorial">?</button>
-  </div>
-  <p class="desc">Find the sale price and money saved.</p>
-  <label for="originalPrice">Original price (₹)</label>
-  <input id="originalPrice" type="number" min="0" placeholder="e.g. 2000">
-  <label for="discountRate">Discount (%)</label>
-  <input id="discountRate" type="number" min="0" max="100" placeholder="e.g. 25">
-  <button id="discountBtn" type="button">Calculate discount</button>
-  <div class="result" id="discountResult" aria-live="polite">Your result will appear here.</div>
-</article>
-
-<!-- IMAGE COMPRESSOR -->
-<article class="card">
-  <div class="icon">🖼️</div>
-  <div class="tool-heading">
-    <h2>Image Compressor</h2>
-    <button type="button" class="help-btn" data-help="image" aria-label="Image Compressor tutorial">?</button>
-  </div>
-  <p class="desc">Reduce image size right in your browser.</p>
-  <label for="imageFile">Choose image</label>
-  <input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp">
-  <div class="row">
-    <div>
-      <label for="quality">Quality</label>
-      <select id="quality">
-        <option value=".8">Balanced</option>
-        <option value=".6">Smaller</option>
-        <option value=".95">High</option>
-      </select>
-    </div>
-    <div>
-      <label for="imageFormat">Format</label>
-      <select id="imageFormat">
-        <option value="image/jpeg">JPG</option>
-        <option value="image/webp">WebP</option>
-        <option value="image/png">PNG</option>
-      </select>
-    </div>
-  </div>
-  <button id="compressBtn" type="button" disabled>Compress image</button>
-  <div class="result" id="imageResult" aria-live="polite">Choose an image to begin.</div>
-  <img id="preview" alt="Compressed image preview" hidden>
-  <a id="imageDownload" class="download" hidden download="compressed-image.jpg">Download image</a>
-</article>
-
-<!-- QR GENERATOR -->
-<article class="card">
-  <div class="icon">🔳</div>
-  <div class="tool-heading">
-    <h2>QR Code Generator</h2>
-    <button type="button" class="help-btn" data-help="qr" aria-label="QR Code Generator tutorial">?</button>
-  </div>
-  <p class="desc">Create a QR code from a website link or text.</p>
-  <label for="qrText">Enter link or text</label>
-  <input id="qrText" maxlength="1500" placeholder="https://example.com">
-  <button id="qrBtn" type="button">Generate QR code</button>
-  <div class="desc" id="qrStatus" aria-live="polite">Enter text to generate your code.</div>
-  <div id="qrOutput"></div>
-  <button id="qrDownload" class="secondary" type="button" disabled>Download QR</button>
-</article>
-</section>
-
-<div class="intro" style="margin-top:20px">
-  <strong>About this website</strong><br>
-  Free Utility Hub provides simple browser-based tools.
-  Always double-check important calculations.
-</div>
-
-<!-- REVIEWS: AT THE BOTTOM OF THE WEBSITE -->
-<section class="card" id="reviews" style="margin-top:20px">
-  <div class="icon">⭐</div>
-  <h2>Reviews & Comments</h2>
-  <p class="desc">How was your experience? Share your rating and feedback.</p>
-
-  <form id="reviewForm">
-    <label for="reviewName">Your name (optional)</label>
-    <input id="reviewName" maxlength="50" placeholder="Enter your name">
-
-    <label for="reviewRating">Your rating</label>
-    <select id="reviewRating" required>
-      <option value="">Choose a rating</option>
-      <option value="5">★★★★★ - Excellent</option>
-      <option value="4">★★★★ - Very good</option>
-      <option value="3">★★★ - Good</option>
-      <option value="2">★★ - Needs improvement</option>
-      <option value="1">★ - Poor</option>
-    </select>
-
-    <label for="reviewComment">Your comment</label>
-    <textarea id="reviewComment" maxlength="500" required
-      placeholder="What did you like? What can we improve?"></textarea>
-
-    <button type="submit">Submit review</button>
-    <p id="reviewStatus" class="review-note" aria-live="polite"></p>
-  </form>
-
-  <hr style="border:0;border-top:1px solid #e2e8f0;margin:24px 0">
-  <h2>Visitor Feedback</h2>
-  <p class="review-note">Demo version: reviews are stored only in this browser.</p>
-  <div id="reviewList">
-    <p class="desc">No reviews yet. Be the first to leave a review!</p>
-  </div>
-</section>
-
-</main>
-
-<footer>
-<div class="footer-inner">
-  <p>Made with ❤️ to make everyday tasks easier.</p>
-  <p>Free Utility Hub © <span id="year"></span></p>
-</div>
-</footer>
-
-<!-- TUTORIAL POPUP -->
-<div class="help-overlay" id="helpOverlay" role="dialog"
-     aria-modal="true" aria-labelledby="helpTitle">
-  <div class="help-box">
-    <button type="button" class="help-close" id="helpClose" aria-label="Close tutorial">✕ Close</button>
-    <h2 id="helpTitle">Tool Tutorial</h2>
-    <div id="helpContent"></div>
-  </div>
-</div>
-
-<script>
-const $ = id => document.getElementById(id);
-$("year").textContent = new Date().getFullYear();
-
-/* Tutorials */
-const tutorials = {
-  word: {
-    title:"Word Counter Tutorial",
-    steps:[
-      "Text box mein apna text type ya paste karo.",
-      "Words, characters aur sentences automatically count honge.",
-      "Reading time 200 words per minute ke hisaab se estimate hota hai.",
-      "Clear button se text hata sakte ho."
-    ]
-  },
-  percent: {
-    title:"Percentage Calculator Tutorial",
-    steps:[
-      "Obtained field mein mile hue marks dalo.",
-      "Total marks field mein maximum marks dalo.",
-      "Calculate dabao aur percentage dekh lo.",
-      "Example: 420 out of 500 = 84%."
-    ]
-  },
-  discount: {
-    title:"Discount Calculator Tutorial",
-    steps:[
-      "Product ki original price dalo.",
-      "Discount percentage dalo, jaise 20.",
-      "Calculate discount dabao.",
-      "Result mein savings aur final price dono dikhenge."
-    ]
-  },
-  image: {
-    title:"Image Compressor Tutorial",
-    steps:[
-      "Choose image se apne device ki JPG, PNG ya WebP image select karo.",
-      "Quality aur output format choose karo.",
-      "Compress image dabao aur result check karo.",
-      "Download image dabakar compressed file save karo.",
-      "File size kam hona guaranteed nahi hai. PNG kabhi-kabhi badi ho sakti hai."
-    ]
-  },
-  qr: {
-    title:"QR Code Generator Tutorial",
-    steps:[
-      "Website link ya text enter karo.",
-      "Generate QR code dabao.",
-      "Phone camera se QR scan karke test karo.",
-      "Download QR dabakar image save karo.",
-      "QR library load karne ke liye internet connection chahiye."
-    ]
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'RTI VOICE',
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFF6F7F9),
+        colorScheme: ColorScheme.fromSeed(seedColor: red),
+        fontFamily: 'Roboto',
+      ),
+      home: const MainShell(),
+    );
   }
+}
+
+class MainShell extends StatefulWidget {
+  const MainShell({super.key});
+
+  @override
+  State<MainShell> createState() => _MainShellState();
+}
+
+class _MainShellState extends State<MainShell> {
+  int tab = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final pages = [
+      const HomePage(),
+      const SimplePage(
+        title: 'Feed',
+        subtitle: 'Latest news from your network',
+        icon: Icons.dynamic_feed,
+      ),
+      const SimplePage(
+        title: 'Activities',
+        subtitle: 'Your recent activity',
+        icon: Icons.notifications_active,
+      ),
+      const SimplePage(
+        title: 'Profile',
+        subtitle: 'Your account profile',
+        icon: Icons.person,
+      ),
+    ];
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        title: const Row(
+          children: [
+            Text('RTI ',
+                style: TextStyle(
+                    color: red, fontWeight: FontWeight.w900)),
+            Text('VOICE',
+                style: TextStyle(fontWeight: FontWeight.w900)),
+            SizedBox(width: 6),
+            Icon(Icons.verified, color: red, size: 16),
+          ],
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => openPage(context, 'Notifications'),
+            icon: const Icon(Icons.notifications_none),
+          ),
+          IconButton(
+            onPressed: () => openPage(context, 'Quick Menu'),
+            icon: const Icon(Icons.menu),
+          ),
+        ],
+      ),
+
+      body: pages[tab],
+
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: red,
+        foregroundColor: Colors.white,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const PostNewsPage(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add, size: 30),
+      ),
+
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.centerDocked,
+
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 7,
+        child: SizedBox(
+          height: 58,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              navItem(Icons.home, 'Home', 0),
+              navItem(Icons.dynamic_feed, 'Feed', 1),
+              const SizedBox(width: 40),
+              navItem(Icons.notifications_none, 'Activity', 2),
+              navItem(Icons.person_outline, 'Profile', 3),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget navItem(IconData icon, String label, int index) {
+    return InkWell(
+      onTap: () => setState(() => tab = index),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: 10, vertical: 5),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: tab == index ? red : muted,
+              size: 21,
+            ),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                color: tab == index ? red : muted,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// HOME PAGE
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.only(bottom: 90),
+      children: [
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween,
+                children: [
+                  quick('Post', Icons.post_add, () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const PostNewsPage(),
+                      ),
+                    );
+                  }),
+                  quick('Live', Icons.live_tv, () {
+                    openPage(context, 'Live Streaming');
+                  }),
+                  quick('E-Paper', Icons.newspaper, () {
+                    openPage(context, 'E-Paper');
+                  }),
+                  quick('Ecom', Icons.shopping_bag, () {
+                    openPage(context, 'E-commerce');
+                  }),
+                  quick('Certificate',
+                      Icons.workspace_premium, () {
+                    openPage(context, 'Certification');
+                  }),
+                ],
+              ),
+              const SizedBox(height: 15),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search news, state, category or user',
+                  prefixIcon: const Icon(Icons.search),
+                  filled: true,
+                  fillColor: const Color(0xFFF5F6F8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 10),
+
+        newsHeader('SP', 'sachin prajapati',
+            'RTI Voice Reporter • 45 min ago'),
+
+        newsCard(
+          context,
+          'Latest Breaking News and Public Updates',
+          'Breaking News • National',
+          'Latest news and technology updates',
+        ),
+
+        newsHeader('RV', 'RTI Voice Desk',
+            'Verified News • 2 hours ago'),
+
+        newsCard(
+          context,
+          'Follow the latest updates from your area',
+          'Local News • Maharashtra',
+          'RTI VOICE community report',
+        ),
+      ],
+    );
+  }
+}
+
+Widget quick(String title, IconData icon, VoidCallback action) {
+  return InkWell(
+    onTap: action,
+    child: SizedBox(
+      width: 60,
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundColor: red.withOpacity(0.09),
+            child: Icon(icon, color: red),
+          ),
+          const SizedBox(height: 5),
+          Text(title,
+              style: const TextStyle(
+                  fontSize: 10, fontWeight: FontWeight.w600)),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget newsHeader(String initials, String name, String time) {
+  return Padding(
+    padding: const EdgeInsets.all(12),
+    child: Row(
+      children: [
+        CircleAvatar(
+          backgroundColor: red,
+          child: Text(initials,
+              style: const TextStyle(color: Colors.white)),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(name,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold)),
+              Text(time,
+                  style: const TextStyle(
+                      color: muted, fontSize: 11)),
+            ],
+          ),
+        ),
+        TextButton(
+          onPressed: () {},
+          child: const Text('+ Follow'),
+        ),
+        const Icon(Icons.more_vert, color: muted),
+      ],
+    ),
+  );
+}
+
+Widget newsCard(
+  BuildContext context,
+  String title,
+  String category,
+  String description,
+) {
+  return Card(
+    margin: const EdgeInsets.symmetric(horizontal: 12),
+    clipBehavior: Clip.antiAlias,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 180,
+          width: double.infinity,
+          color: const Color(0xFF25364B),
+          child: Stack(
+            children: [
+              const Center(
+                child: Icon(
+                  Icons.newspaper,
+                  color: Colors.white24,
+                  size: 100,
+                ),
+              ),
+              Positioned(
+                left: 12,
+                top: 12,
+                child: Container(
+                  color: red,
+                  padding: const EdgeInsets.all(6),
+                  child: Text(
+                    category,
+                    style: const TextStyle(
+                        color: Colors.white, fontSize: 10),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15)),
+              const SizedBox(height: 5),
+              Text(description,
+                  style: const TextStyle(
+                      color: muted, fontSize: 12)),
+              const SizedBox(height: 12),
+              const Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceAround,
+                children: [
+                  ActionItem(Icons.visibility_outlined, '7'),
+                  ActionItem(Icons.thumb_up_alt_outlined, 'Like'),
+                  ActionItem(Icons.comment_outlined, 'Comment'),
+                  ActionItem(Icons.share_outlined, 'Share'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class ActionItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+
+  const ActionItem(this.icon, this.title, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: muted),
+        const SizedBox(width: 4),
+        Text(title,
+            style: const TextStyle(
+                color: muted, fontSize: 11)),
+      ],
+    );
+  }
+}
+
+// FEATURE PAGES
+
+void openPage(BuildContext context, String title) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => FeaturePage(title: title),
+    ),
+  );
+}
+
+const Map<String, List<String>> featureItems = {
+  'Quick Menu': [
+    'Profile',
+    'My News',
+    'My Network',
+    'Wallet',
+    'Withdraw',
+    'Subscription Plans',
+    'Post News',
+    'E-Paper',
+    'Live Streaming',
+    'Certification',
+    'Notifications',
+    'Buy Product',
+    'Sell Product',
+    'My Ecom Product',
+    'Ecom Enquiries',
+    'Ads Enquiries',
+    'Advertisement Post',
+    'Advertisement Dashboard',
+    'Admin Panel',
+  ],
+  'My News': [
+    'Current News Feed Records',
+    'Drafts',
+    'Published News',
+    'Pending Approval',
+    'Rejected News',
+  ],
+  'My Network': [
+    'Followers',
+    'Following',
+    'Invite Members',
+  ],
+  'Wallet': [
+    'Wallet Balance',
+    'Transaction History',
+    'Add Money',
+  ],
+  'Withdraw': [
+    'Request Withdrawal',
+    'Withdrawal History',
+  ],
+  'Subscription Plans': [
+    'Special Plan',
+    'Pro Plan',
+    'Premium Plan',
+    'Current Subscription',
+  ],
+  'E-Paper': [
+    'Latest E-Paper',
+    'Newspaper Archive',
+  ],
+  'E-commerce': [
+    'Buy Product',
+    'Sell Product',
+    'My Ecom Product',
+    'Ecom Enquiries',
+  ],
+  'Live Streaming': [
+    'Start Live',
+    'Live Videos',
+    'Scheduled Live',
+  ],
+  'Certification': [
+    'Apply for Certificate',
+    'My Certificates',
+  ],
+  'Notifications': [
+    'All Notifications',
+    'News Updates',
+  ],
+  'Admin Panel': [
+    'Dashboard',
+    'Manage Users',
+    'Approve News',
+    'Manage Reports',
+    'Products',
+    'Subscriptions',
+    'Payments',
+    'Advertisements',
+    'Settings',
+  ],
 };
 
-const helpOverlay = $("helpOverlay");
-const helpTitle = $("helpTitle");
-const helpContent = $("helpContent");
-let lastHelpButton = null;
+class FeaturePage extends StatelessWidget {
+  final String title;
 
-document.querySelectorAll(".help-btn").forEach(button => {
-  button.addEventListener("click", () => {
-    const tutorial = tutorials[button.dataset.help];
-    if (!tutorial) return;
+  const FeaturePage({super.key, required this.title});
 
-    lastHelpButton = button;
-    helpTitle.textContent = tutorial.title;
-    helpContent.replaceChildren();
+  @override
+  Widget build(BuildContext context) {
+    final items = featureItems[title] ??
+        ['Overview', 'My Records', 'Settings'];
 
-    const list = document.createElement("ol");
-    tutorial.steps.forEach(step => {
-      const li = document.createElement("li");
-      li.textContent = step;
-      list.appendChild(li);
-    });
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: Colors.white,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: red,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  'Access all features quickly',
+                  style: TextStyle(color: Colors.white70),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          ...items.map(
+            (item) => Card(
+              child: ListTile(
+                leading: const Icon(Icons.dashboard, color: red),
+                title: Text(item),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  if (item == 'Post News') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const PostNewsPage(),
+                      ),
+                    );
+                  } else if (item == 'Admin Panel') {
+                    openPage(context, 'Admin Panel');
+                  } else {
+                    openPage(context, item);
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-    helpContent.appendChild(list);
-    helpOverlay.style.display = "flex";
-    $("helpClose").focus();
+// POST NEWS PAGE
+
+class PostNewsPage extends StatefulWidget {
+  const PostNewsPage({super.key});
+
+  @override
+  State<PostNewsPage> createState() => _PostNewsPageState();
+}
+
+class _PostNewsPageState extends State<PostNewsPage> {
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+
+  String reportType = 'Select report type';
+  String mediaType = 'Image';
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add News'),
+        backgroundColor: Colors.white,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          const Text(
+            '1. Write News Title *',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+
+          TextField(
+            controller: titleController,
+            decoration: inputDecoration('Enter news title...'),
+          ),
+
+          const SizedBox(height: 18),
+
+          const Text(
+            '2. Write Description For News *',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+
+          TextField(
+            controller: descriptionController,
+            maxLines: 5,
+            decoration:
+                inputDecoration('Enter description...'),
+          ),
+
+          const SizedBox(height: 18),
+
+          const Text(
+            '3. Select Report Type *',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+
+          DropdownButtonFormField<String>(
+            value: reportType,
+            decoration: inputDecoration(''),
+            items: [
+              'Select report type',
+              'Breaking News',
+              'Local News',
+              'National News',
+              'Politics',
+              'Public Issue',
+              'Other',
+            ].map((value) {
+              return DropdownMenuItem(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (value) {
+              if (value != null) {
+                setState(() => reportType = value);
+              }
+            },
+          ),
+
+          const SizedBox(height: 18),
+
+          const Text(
+            '4. Select Media Type',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+
+          const SizedBox(height: 8),
+
+          Wrap(
+            spacing: 8,
+            children: ['None', 'Image', 'Video', 'PDF']
+                .map(
+                  (value) => ChoiceChip(
+                    label: Text(value),
+                    selected: mediaType == value,
+                    onSelected: (_) {
+                      setState(() => mediaType = value);
+                    },
+                  ),
+                )
+                .toList(),
+          ),
+
+          const SizedBox(height: 25),
+
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: red,
+                  ),
+                  onPressed: () {
+                    if (titleController.text.trim().isEmpty ||
+                        descriptionController.text.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please enter title and description'),
+                        ),
+                      );
+                      return;
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'News form completed. Backend connection required.',
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Post News'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+InputDecoration inputDecoration(String hint) {
+  return InputDecoration(
+    hintText: hint,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(9),
+    ),
+    contentPadding: const EdgeInsets.all(13),
+  );
+}
+
+// SIMPLE PAGES
+
+class SimplePage extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+
+  const SimplePage({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
   });
-});
 
-function closeTutorial() {
-  helpOverlay.style.display = "none";
-  if (lastHelpButton) lastHelpButton.focus();
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 58, color: red),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+          Text(
+            subtitle,
+            style: const TextStyle(color: muted),
+          ),
+        ],
+      ),
+    );
+  }
 }
-
-$("helpClose").addEventListener("click", closeTutorial);
-helpOverlay.addEventListener("click", event => {
-  if (event.target === helpOverlay) closeTutorial();
-});
-document.addEventListener("keydown", event => {
-  if (event.key === "Escape" && helpOverlay.style.display === "flex") closeTutorial();
-});
-
-/* Word counter */
-function updateWords() {
-  const text = $("wordsInput").value;
-  const trimmed = text.trim();
-  const words = trimmed ? (trimmed.match(/\S+/g) || []).length : 0;
-  const sentences = trimmed ? (trimmed.match(/[.!?]+(?=\s|$)/g) || []).length : 0;
-
-  $("wordCount").textContent = words.toLocaleString();
-  $("charCount").textContent = text.length.toLocaleString();
-  $("sentenceCount").textContent = sentences.toLocaleString();
-  $("readingTime").textContent = words ? Math.max(1, Math.ceil(words/200)) + " min" : "0 min";
-}
-$("wordsInput").addEventListener("input", updateWords);
-$("clearText").addEventListener("click", () => {
-  $("wordsInput").value = "";
-  updateWords();
-});
-
-/* Percentage calculator */
-$("percentageBtn").addEventListener("click", () => {
-  const a = $("obtained").value;
-  const b = $("total").value;
-  const x = Number(a), y = Number(b);
-  const out = $("percentageResult");
-
-  if (a === "" || b === "" || !Number.isFinite(x) ||
-      !Number.isFinite(y) || y <= 0 || x < 0) {
-    out.textContent = "Enter valid numbers. Total must be greater than zero.";
-    return;
-  }
-  out.textContent = "Percentage: " +
-    (x/y*100).toLocaleString(undefined,{maximumFractionDigits:2}) + "%";
-});
-
-/* Discount calculator */
-$("discountBtn").addEventListener("click", () => {
-  const p = $("originalPrice").value;
-  const d = $("discountRate").value;
-  const price = Number(p), rate = Number(d);
-  const out = $("discountResult");
-
-  if (p === "" || d === "" || !Number.isFinite(price) ||
-      !Number.isFinite(rate) || price < 0 || rate < 0 || rate > 100) {
-    out.textContent = "Enter a price of 0 or more and discount between 0 and 100.";
-    return;
-  }
-
-  const saved = price*rate/100;
-  out.textContent = "You save ₹" + saved.toFixed(2) +
-    ". Final price: ₹" + (price-saved).toFixed(2) + ".";
-});
-
-/* Image compressor: image processing stays in the browser */
-let chosenFile = null;
-let imageURL = null;
-
-$("imageFile").addEventListener("change", () => {
-  chosenFile = $("imageFile").files[0] || null;
-  $("compressBtn").disabled = !chosenFile;
-  $("imageResult").textContent = chosenFile
-    ? "Selected: " + chosenFile.name + " (" + bytes(chosenFile.size) + ")"
-    : "Choose an image to begin.";
-
-  $("preview").hidden = true;
-  $("imageDownload").hidden = true;
-
-  if (imageURL) {
-    URL.revokeObjectURL(imageURL);
-    imageURL = null;
-  }
-});
-
-function bytes(n) {
-  return n < 1024 ? n + " B"
-    : n < 1048576 ? (n/1024).toFixed(1) + " KB"
-    : (n/1048576).toFixed(2) + " MB";
-}
-
-$("compressBtn").addEventListener("click", () => {
-  if (!chosenFile) return;
-  if (!chosenFile.type.startsWith("image/")) {
-    $("imageResult").textContent = "Please select an image file.";
-    return;
-  }
-
-  $("compressBtn").disabled = true;
-  $("imageResult").textContent = "Compressing image...";
-
-  const reader = new FileReader();
-  reader.onerror = () => {
-    $("imageResult").textContent = "Could not read image.";
-    $("compressBtn").disabled = false;
-  };
-
-  reader.onload = () => {
-    const img = new Image();
-
-    img.onerror = () => {
-      $("imageResult").textContent = "Could not open this image.";
-      $("compressBtn").disabled = false;
-    };
-
-    img.onload = () => {
-      try {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-
-        const ctx = canvas.getContext("2d");
-        if (!ctx) throw new Error("Canvas unavailable");
-
-        const type = $("imageFormat").value;
-        if (type === "image/jpeg") {
-          ctx.fillStyle = "#fff";
-          ctx.fillRect(0,0,canvas.width,canvas.height);
-        }
-        ctx.drawImage(img,0,0);
-
-        canvas.toBlob(blob => {
-          if (!blob) {
-            $("imageResult").textContent = "Compression failed. Try another format.";
-            $("compressBtn").disabled = false;
-            return;
-          }
-
-          if (imageURL) URL.revokeObjectURL(imageURL);
-          imageURL = URL.createObjectURL(blob);
-
-          $("preview").src = imageURL;
-          $("preview").hidden = false;
-
-          const ext = type === "image/jpeg" ? "jpg" :
-                      type === "image/png" ? "png" : "webp";
-          $("imageDownload").href = imageURL;
-          $("imageDownload").download = "compressed-image." + ext;
-          $("imageDownload").hidden = false;
-
-          const diff = chosenFile.size ? (1-blob.size/chosenFile.size)*100 : 0;
-          const message = blob.size < chosenFile.size
-            ? diff.toFixed(1) + "% smaller"
-            : blob.size > chosenFile.size
-              ? Math.abs(diff).toFixed(1) + "% larger"
-              : "same size";
-
-          $("imageResult").textContent = "Original: " + bytes(chosenFile.size) +
-            " · New: " + bytes(blob.size) + " · " + message + ".";
-          $("compressBtn").disabled = false;
-        },type,Number($("quality").value));
-      } catch (error) {
-        $("imageResult").textContent = "Could not process image. Try a smaller file.";
-        $("compressBtn").disabled = false;
-      }
-    };
-    img.src = reader.result;
-  };
-  reader.readAsDataURL(chosenFile);
-});
-
-/* QR generator */
-$("qrBtn").addEventListener("click", () => {
-  const value = $("qrText").value.trim();
-  $("qrOutput").replaceChildren();
-  $("qrDownload").disabled = true;
-
-  if (!value) {
-    $("qrStatus").textContent = "Please enter a link or text.";
-    return;
-  }
-  if (!window.QRCode) {
-    $("qrStatus").textContent = "QR library unavailable. Check your internet connection and try again.";
-    return;
-  }
-
-  try {
-    new QRCode($("qrOutput"), {
-      text:value, width:220, height
