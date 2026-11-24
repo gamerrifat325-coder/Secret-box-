@@ -1,1 +1,768 @@
 
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const RTIVoiceApp());
+}
+
+const Color red = Color(0xFFB5121B);
+const Color ink = Color(0xFF20232B);
+const Color muted = Color(0xFF7C8492);
+
+class RTIVoiceApp extends StatelessWidget {
+  const RTIVoiceApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'RTI VOICE',
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFF6F7F9),
+        colorScheme: ColorScheme.fromSeed(seedColor: red),
+        fontFamily: 'Roboto',
+      ),
+      home: const MainShell(),
+    );
+  }
+}
+
+class MainShell extends StatefulWidget {
+  const MainShell({super.key});
+
+  @override
+  State<MainShell> createState() => _MainShellState();
+}
+
+class _MainShellState extends State<MainShell> {
+  int tab = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final pages = [
+      const HomePage(),
+      const SimplePage(
+        title: 'Feed',
+        subtitle: 'Latest news from your network',
+        icon: Icons.dynamic_feed,
+      ),
+      const SimplePage(
+        title: 'Activities',
+        subtitle: 'Your recent activity',
+        icon: Icons.notifications_active,
+      ),
+      const SimplePage(
+        title: 'Profile',
+        subtitle: 'Your account profile',
+        icon: Icons.person,
+      ),
+    ];
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        title: const Row(
+          children: [
+            Text('RTI ',
+                style: TextStyle(
+                    color: red, fontWeight: FontWeight.w900)),
+            Text('VOICE',
+                style: TextStyle(fontWeight: FontWeight.w900)),
+            SizedBox(width: 6),
+            Icon(Icons.verified, color: red, size: 16),
+          ],
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => openPage(context, 'Notifications'),
+            icon: const Icon(Icons.notifications_none),
+          ),
+          IconButton(
+            onPressed: () => openPage(context, 'Quick Menu'),
+            icon: const Icon(Icons.menu),
+          ),
+        ],
+      ),
+
+      body: pages[tab],
+
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: red,
+        foregroundColor: Colors.white,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const PostNewsPage(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add, size: 30),
+      ),
+
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.centerDocked,
+
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 7,
+        child: SizedBox(
+          height: 58,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              navItem(Icons.home, 'Home', 0),
+              navItem(Icons.dynamic_feed, 'Feed', 1),
+              const SizedBox(width: 40),
+              navItem(Icons.notifications_none, 'Activity', 2),
+              navItem(Icons.person_outline, 'Profile', 3),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget navItem(IconData icon, String label, int index) {
+    return InkWell(
+      onTap: () => setState(() => tab = index),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: 10, vertical: 5),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: tab == index ? red : muted,
+              size: 21,
+            ),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                color: tab == index ? red : muted,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// HOME PAGE
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.only(bottom: 90),
+      children: [
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween,
+                children: [
+                  quick('Post', Icons.post_add, () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const PostNewsPage(),
+                      ),
+                    );
+                  }),
+                  quick('Live', Icons.live_tv, () {
+                    openPage(context, 'Live Streaming');
+                  }),
+                  quick('E-Paper', Icons.newspaper, () {
+                    openPage(context, 'E-Paper');
+                  }),
+                  quick('Ecom', Icons.shopping_bag, () {
+                    openPage(context, 'E-commerce');
+                  }),
+                  quick('Certificate',
+                      Icons.workspace_premium, () {
+                    openPage(context, 'Certification');
+                  }),
+                ],
+              ),
+              const SizedBox(height: 15),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search news, state, category or user',
+                  prefixIcon: const Icon(Icons.search),
+                  filled: true,
+                  fillColor: const Color(0xFFF5F6F8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 10),
+
+        newsHeader('SP', 'sachin prajapati',
+            'RTI Voice Reporter • 45 min ago'),
+
+        newsCard(
+          context,
+          'Latest Breaking News and Public Updates',
+          'Breaking News • National',
+          'Latest news and technology updates',
+        ),
+
+        newsHeader('RV', 'RTI Voice Desk',
+            'Verified News • 2 hours ago'),
+
+        newsCard(
+          context,
+          'Follow the latest updates from your area',
+          'Local News • Maharashtra',
+          'RTI VOICE community report',
+        ),
+      ],
+    );
+  }
+}
+
+Widget quick(String title, IconData icon, VoidCallback action) {
+  return InkWell(
+    onTap: action,
+    child: SizedBox(
+      width: 60,
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundColor: red.withOpacity(0.09),
+            child: Icon(icon, color: red),
+          ),
+          const SizedBox(height: 5),
+          Text(title,
+              style: const TextStyle(
+                  fontSize: 10, fontWeight: FontWeight.w600)),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget newsHeader(String initials, String name, String time) {
+  return Padding(
+    padding: const EdgeInsets.all(12),
+    child: Row(
+      children: [
+        CircleAvatar(
+          backgroundColor: red,
+          child: Text(initials,
+              style: const TextStyle(color: Colors.white)),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(name,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold)),
+              Text(time,
+                  style: const TextStyle(
+                      color: muted, fontSize: 11)),
+            ],
+          ),
+        ),
+        TextButton(
+          onPressed: () {},
+          child: const Text('+ Follow'),
+        ),
+        const Icon(Icons.more_vert, color: muted),
+      ],
+    ),
+  );
+}
+
+Widget newsCard(
+  BuildContext context,
+  String title,
+  String category,
+  String description,
+) {
+  return Card(
+    margin: const EdgeInsets.symmetric(horizontal: 12),
+    clipBehavior: Clip.antiAlias,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 180,
+          width: double.infinity,
+          color: const Color(0xFF25364B),
+          child: Stack(
+            children: [
+              const Center(
+                child: Icon(
+                  Icons.newspaper,
+                  color: Colors.white24,
+                  size: 100,
+                ),
+              ),
+              Positioned(
+                left: 12,
+                top: 12,
+                child: Container(
+                  color: red,
+                  padding: const EdgeInsets.all(6),
+                  child: Text(
+                    category,
+                    style: const TextStyle(
+                        color: Colors.white, fontSize: 10),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15)),
+              const SizedBox(height: 5),
+              Text(description,
+                  style: const TextStyle(
+                      color: muted, fontSize: 12)),
+              const SizedBox(height: 12),
+              const Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceAround,
+                children: [
+                  ActionItem(Icons.visibility_outlined, '7'),
+                  ActionItem(Icons.thumb_up_alt_outlined, 'Like'),
+                  ActionItem(Icons.comment_outlined, 'Comment'),
+                  ActionItem(Icons.share_outlined, 'Share'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class ActionItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+
+  const ActionItem(this.icon, this.title, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: muted),
+        const SizedBox(width: 4),
+        Text(title,
+            style: const TextStyle(
+                color: muted, fontSize: 11)),
+      ],
+    );
+  }
+}
+
+// FEATURE PAGES
+
+void openPage(BuildContext context, String title) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => FeaturePage(title: title),
+    ),
+  );
+}
+
+const Map<String, List<String>> featureItems = {
+  'Quick Menu': [
+    'Profile',
+    'My News',
+    'My Network',
+    'Wallet',
+    'Withdraw',
+    'Subscription Plans',
+    'Post News',
+    'E-Paper',
+    'Live Streaming',
+    'Certification',
+    'Notifications',
+    'Buy Product',
+    'Sell Product',
+    'My Ecom Product',
+    'Ecom Enquiries',
+    'Ads Enquiries',
+    'Advertisement Post',
+    'Advertisement Dashboard',
+    'Admin Panel',
+  ],
+  'My News': [
+    'Current News Feed Records',
+    'Drafts',
+    'Published News',
+    'Pending Approval',
+    'Rejected News',
+  ],
+  'My Network': [
+    'Followers',
+    'Following',
+    'Invite Members',
+  ],
+  'Wallet': [
+    'Wallet Balance',
+    'Transaction History',
+    'Add Money',
+  ],
+  'Withdraw': [
+    'Request Withdrawal',
+    'Withdrawal History',
+  ],
+  'Subscription Plans': [
+    'Special Plan',
+    'Pro Plan',
+    'Premium Plan',
+    'Current Subscription',
+  ],
+  'E-Paper': [
+    'Latest E-Paper',
+    'Newspaper Archive',
+  ],
+  'E-commerce': [
+    'Buy Product',
+    'Sell Product',
+    'My Ecom Product',
+    'Ecom Enquiries',
+  ],
+  'Live Streaming': [
+    'Start Live',
+    'Live Videos',
+    'Scheduled Live',
+  ],
+  'Certification': [
+    'Apply for Certificate',
+    'My Certificates',
+  ],
+  'Notifications': [
+    'All Notifications',
+    'News Updates',
+  ],
+  'Admin Panel': [
+    'Dashboard',
+    'Manage Users',
+    'Approve News',
+    'Manage Reports',
+    'Products',
+    'Subscriptions',
+    'Payments',
+    'Advertisements',
+    'Settings',
+  ],
+};
+
+class FeaturePage extends StatelessWidget {
+  final String title;
+
+  const FeaturePage({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    final items = featureItems[title] ??
+        ['Overview', 'My Records', 'Settings'];
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: Colors.white,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: red,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  'Access all features quickly',
+                  style: TextStyle(color: Colors.white70),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          ...items.map(
+            (item) => Card(
+              child: ListTile(
+                leading: const Icon(Icons.dashboard, color: red),
+                title: Text(item),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  if (item == 'Post News') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const PostNewsPage(),
+                      ),
+                    );
+                  } else if (item == 'Admin Panel') {
+                    openPage(context, 'Admin Panel');
+                  } else {
+                    openPage(context, item);
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// POST NEWS PAGE
+
+class PostNewsPage extends StatefulWidget {
+  const PostNewsPage({super.key});
+
+  @override
+  State<PostNewsPage> createState() => _PostNewsPageState();
+}
+
+class _PostNewsPageState extends State<PostNewsPage> {
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+
+  String reportType = 'Select report type';
+  String mediaType = 'Image';
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add News'),
+        backgroundColor: Colors.white,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          const Text(
+            '1. Write News Title *',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+
+          TextField(
+            controller: titleController,
+            decoration: inputDecoration('Enter news title...'),
+          ),
+
+          const SizedBox(height: 18),
+
+          const Text(
+            '2. Write Description For News *',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+
+          TextField(
+            controller: descriptionController,
+            maxLines: 5,
+            decoration:
+                inputDecoration('Enter description...'),
+          ),
+
+          const SizedBox(height: 18),
+
+          const Text(
+            '3. Select Report Type *',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+
+          DropdownButtonFormField<String>(
+            value: reportType,
+            decoration: inputDecoration(''),
+            items: [
+              'Select report type',
+              'Breaking News',
+              'Local News',
+              'National News',
+              'Politics',
+              'Public Issue',
+              'Other',
+            ].map((value) {
+              return DropdownMenuItem(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (value) {
+              if (value != null) {
+                setState(() => reportType = value);
+              }
+            },
+          ),
+
+          const SizedBox(height: 18),
+
+          const Text(
+            '4. Select Media Type',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+
+          const SizedBox(height: 8),
+
+          Wrap(
+            spacing: 8,
+            children: ['None', 'Image', 'Video', 'PDF']
+                .map(
+                  (value) => ChoiceChip(
+                    label: Text(value),
+                    selected: mediaType == value,
+                    onSelected: (_) {
+                      setState(() => mediaType = value);
+                    },
+                  ),
+                )
+                .toList(),
+          ),
+
+          const SizedBox(height: 25),
+
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: red,
+                  ),
+                  onPressed: () {
+                    if (titleController.text.trim().isEmpty ||
+                        descriptionController.text.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please enter title and description'),
+                        ),
+                      );
+                      return;
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'News form completed. Backend connection required.',
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Post News'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+InputDecoration inputDecoration(String hint) {
+  return InputDecoration(
+    hintText: hint,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(9),
+    ),
+    contentPadding: const EdgeInsets.all(13),
+  );
+}
+
+// SIMPLE PAGES
+
+class SimplePage extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+
+  const SimplePage({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 58, color: red),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+          Text(
+            subtitle,
+            style: const TextStyle(color: muted),
+          ),
+        ],
+      ),
+    );
+  }
+}
