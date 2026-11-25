@@ -10,7 +10,7 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--white);font:15px Arial,sans-serif}
 button,input,textarea{font:inherit}button{cursor:pointer;border:0}
 header{height:62px;position:sticky;top:0;z-index:5;background:#0d1420;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center}
-.brand{font-size:25px;font-weight:900;letter-spacing:.3px}.bell{position:absolute;left:16px;background:none;color:white;padding:6px;width:38px;height:38px}.bell svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.brand{font-size:25px;font-weight:900;letter-spacing:.3px}.bell{position:absolute;right:16px;background:none;color:white;padding:6px;width:38px;height:38px}.bell svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 main{max-width:680px;margin:auto;padding:14px 14px 90px;min-height:calc(100vh - 130px)}
 h2{font-size:21px;margin:16px 0}.muted{color:var(--muted);font-size:13px}.empty{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:34px 18px;text-align:center;margin:18px 0}.empty h3{margin:0 0 8px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:14px 0}
@@ -31,12 +31,13 @@ input,textarea{display:block;width:100%;background:#0b1220;color:white;border:1p
 </style>
 </head>
 <body>
-<header><button class="bell" onclick="showTab('Notifications')" aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v18M3 6l3-3 3 3M3 18l3 3 3-3"/></svg></button><div class="brand">RTI News</div></header>
+<header><div class="brand">RTI News</div><button class="bell" onclick="showTab('Notifications')" aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button></header>
 <main id="app"></main>
 <nav>
 <button id="navHome" class="active" onclick="showTab('Home')" aria-label="Home"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></button>
 <button id="navReels" onclick="showTab('Reels')" aria-label="Reels"><svg viewBox="0 0 24 24"><rect x="3" y="2" width="18" height="20" rx="5"/><path d="m10 8 6 4-6 4z"/></svg><span>Reels</span></button>
 <button class="plus" onclick="openCreate()" aria-label="Create">＋</button>
+<button id="navAds" onclick="showTab('Ads')" aria-label="Advertisements"><svg viewBox="0 0 24 24"><path d="M3 7h18l-1.5 14h-15L3 7Z"/><path d="M8 7a4 4 0 0 1 8 0M9 11v6M15 11v6"/></svg><span>Ads</span></button>
 <button id="navProfile" onclick="showTab('Profile')" aria-label="Profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Profile</span></button>
 </nav>
 
@@ -45,6 +46,7 @@ input,textarea{display:block;width:100%;background:#0b1220;color:white;border:1p
 <textarea id="captionInput" placeholder="Write a caption (optional)..."></textarea>
 <label class="filelabel">＋ Upload a Reel (Video)<input id="reelFile" class="hidden" type="file" accept="video/*" onchange="uploadMedia(event,'reel')"></label>
 <label class="filelabel">▧ Upload a Post (Photo)<input id="postFile" class="hidden" type="file" accept="image/*" onchange="uploadMedia(event,'post')"></label>
+<label class="filelabel">🛍 Upload an Advertisement (Photo or Video)<input id="adFile" class="hidden" type="file" accept="image/*,video/*" onchange="uploadMedia(event,'ad')"></label>
 <button class="secondary" onclick="closeModal('createModal')">Cancel</button><p class="small">Large videos may use significant browser storage.</p>
 </div></div>
 
@@ -74,9 +76,9 @@ function openCreate(){document.getElementById('captionInput').value='';document.
 function closeModal(id){document.getElementById(id).classList.remove('show')}
 function empty(title,sub,button=''){return `<div class="empty"><h3>${esc(title)}</h3><div class="muted">${esc(sub)}</div>${button}</div>`}
 function timeAgo(t){return new Date(t).toLocaleString()}
-function renderPost(p){const liked=p.likes.includes('me');return `<article class="card">
-<div class="posthead">${avatarHTML(p.avatar)}<div><div class="name">${esc(p.name)}</div><div class="small">${p.type==='reel'?'Reel':'News post'} · ${timeAgo(p.time)}</div></div></div>
-${p.type==='reel'?`<video class="media" src="${p.src}" controls playsinline loop></video>`:`<img class="media" src="${p.src}" alt="News post">`}
+function renderPost(p){const liked=p.likes.includes('me');const isVideo=p.type==='reel'||(p.type==='ad'&&p.mediaKind==='video');const label=p.type==='ad'?'Advertisement':p.type==='reel'?'Reel':'News post';return `<article class="card">
+<div class="posthead">${avatarHTML(p.avatar)}<div><div class="name">${esc(p.name)}</div><div class="small">${label} · ${timeAgo(p.time)}</div></div></div>
+${isVideo?`<video class="media" src="${p.src}" controls playsinline loop></video>`:`<img class="media" src="${p.src}" alt="${label}">`}
 ${p.caption?`<div class="caption">${esc(p.caption)}</div>`:''}
 <div class="actions"><button class="action ${liked?'liked':''}" onclick="toggleLike('${p.id}')">${liked?'♥':'♡'} ${p.likes.length} Like</button><button class="action" onclick="openComments('${p.id}')">◯ ${p.comments.length} Comment</button></div></article>`}
 function render(){
@@ -96,15 +98,16 @@ ${filtered.length?filtered.map(renderPost).join(''):empty(selected?'No news foun
 return;
 }
 if(state.tab==='Reels'){const list=posts.filter(x=>x.type==='reel');root.innerHTML='<h2>Reels</h2>'+(list.length?list.map(renderPost).join(''):empty('No reels yet. Upload your first reel!','Your uploaded videos will appear here.'))+'<button class="primary" onclick="openCreate()">＋ Upload a Reel</button>';return;}
+if(state.tab==='Ads'){const list=posts.filter(x=>x.type==='ad');root.innerHTML='<h2>Advertisements</h2>'+(list.length?list.map(renderPost).join(''):empty('No advertisements yet','There are no advertisements right now.'))+'<button class="primary" onclick="openCreate()">＋ Upload an Advertisement</button>';return;}
 if(state.tab==='Notifications'){root.innerHTML='<h2>Notifications</h2>'+(state.notifications.length?state.notifications.map(n=>`<div class="notice"><b>${esc(n.title)}</b><p>${esc(n.message)}</p><div class="small">${timeAgo(n.time)}</div></div>`).join(''):empty('No notifications yet','New activity will appear here.'));return;}
 if(state.tab==='Profile'){const mine=posts.filter(x=>x.owner==='me'),myPosts=mine.filter(x=>x.type==='post'),myReels=mine.filter(x=>x.type==='reel');root.innerHTML=`
 <div class="profiletop">${avatarHTML(p.avatar,88)}<div><h2>${esc(p.name||'RTI News User')}</h2><div class="muted">${mine.length} posts · ${myReels.length} reels</div></div></div>
 ${p.bio?`<div class="bio">${esc(p.bio)}</div>`:''}
 <button class="secondary" onclick="openEdit()">Edit Profile</button><h2>Your Posts</h2>
 ${myPosts.length?myPosts.map(renderPost).join(''):empty('No posts yet','Your uploaded posts will appear here.')}
-<h2>Your Reels</h2>${myReels.length?myReels.map(renderPost).join(''):empty('No reels yet','Upload a reel to see it on your profile.')}`;return;}
+<h2>Your Reels</h2>${myReels.length?myReels.map(renderPost).join(''):empty('No reels yet','Upload a reel to see it on your profile.')}<h2>Your Advertisements</h2>${mine.filter(x=>x.type==='ad').length?mine.filter(x=>x.type==='ad').map(renderPost).join(''):empty('No advertisements yet','Your uploaded advertisements will appear here.')}`;return;}
 }
-function uploadMedia(ev,type){const file=ev.target.files[0];if(!file)return;if(type==='reel'&&!file.type.startsWith('video/'))return alert('Please select a video.');if(type==='post'&&!file.type.startsWith('image/'))return alert('Please select an image.');if(file.size>80*1024*1024)return alert('Please choose a file smaller than 80 MB.');const reader=new FileReader();reader.onload=()=>{const p={id:Date.now().toString(),owner:'me',name:state.profile.name||'RTI News User',avatar:state.profile.avatar||'',type,src:reader.result,caption:document.getElementById('captionInput').value.trim(),likes:[],comments:[],time:Date.now()};state.posts.unshift(p);save();closeModal('createModal');ev.target.value='';showTab(type==='reel'?'Reels':'Home');};reader.onerror=()=>alert('Could not read this file.');reader.readAsDataURL(file);}
+function uploadMedia(ev,type){const file=ev.target.files[0];if(!file)return;if(type==='reel'&&!file.type.startsWith('video/'))return alert('Please select a video.');if(type==='post'&&!file.type.startsWith('image/'))return alert('Please select an image.');if(type==='ad'&&!file.type.startsWith('image/')&&!file.type.startsWith('video/'))return alert('Please select an image or video for the advertisement.');if(file.size>80*1024*1024)return alert('Please choose a file smaller than 80 MB.');const reader=new FileReader();reader.onload=()=>{const p={id:Date.now().toString(),owner:'me',name:state.profile.name||'RTI News User',avatar:state.profile.avatar||'',type,mediaKind:file.type.startsWith('video/')?'video':'image',src:reader.result,caption:document.getElementById('captionInput').value.trim(),likes:[],comments:[],time:Date.now()};state.posts.unshift(p);save();closeModal('createModal');ev.target.value='';showTab(type==='reel'?'Reels':type==='ad'?'Ads':'Home');};reader.onerror=()=>alert('Could not read this file.');reader.readAsDataURL(file);}
 function openEdit(){document.getElementById('nameInput').value=state.profile.name||'';document.getElementById('bioInput').value=state.profile.bio||'';document.getElementById('editAvatar').innerHTML=state.profile.avatar?`<img src="${state.profile.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:'👤';document.getElementById('editModal').classList.add('show')}
 function changeAvatar(ev){const f=ev.target.files[0];if(!f)return;if(!f.type.startsWith('image/'))return alert('Choose an image.');const r=new FileReader();r.onload=()=>{state.profile.avatar=r.result;document.getElementById('editAvatar').innerHTML=`<img src="${r.result}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;};r.readAsDataURL(f)}
 function saveProfile(){state.profile.name=document.getElementById('nameInput').value.trim()||'RTI News User';state.profile.bio=document.getElementById('bioInput').value.trim();state.posts.forEach(p=>{if(p.owner==='me'){p.name=state.profile.name;p.avatar=state.profile.avatar||'';}});save();closeModal('editModal');render();}
