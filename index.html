@@ -10,7 +10,7 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--white);font:15px Arial,sans-serif}
 button,input,textarea{font:inherit}button{cursor:pointer;border:0}
 header{height:62px;position:sticky;top:0;z-index:5;background:#0d1420;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center}
-.brand{font-size:25px;font-weight:900;letter-spacing:.3px}.bell{position:absolute;right:16px;background:none;color:white;font-size:25px}
+.brand{font-size:25px;font-weight:900;letter-spacing:.3px}.bell{position:absolute;left:16px;background:none;color:white;padding:6px;width:38px;height:38px}.bell svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 main{max-width:680px;margin:auto;padding:14px 14px 90px;min-height:calc(100vh - 130px)}
 h2{font-size:21px;margin:16px 0}.muted{color:var(--muted);font-size:13px}.empty{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:34px 18px;text-align:center;margin:18px 0}.empty h3{margin:0 0 8px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:14px 0}
@@ -23,19 +23,21 @@ nav .plus{background:var(--blue);border-radius:12px;width:44px;height:40px;font-
 .modal{display:none;position:fixed;inset:0;z-index:10;background:#000b;align-items:flex-end;justify-content:center}.modal.show{display:flex}.sheet{background:#101827;border-radius:22px 22px 0 0;padding:20px;width:100%;max-width:680px;max-height:92vh;overflow:auto}.sheet h2{margin-top:0}
 input,textarea{display:block;width:100%;background:#0b1220;color:white;border:1px solid #344155;border-radius:10px;padding:13px;margin:8px 0;outline:none}textarea{min-height:90px;resize:vertical}
 .notice{padding:14px;border-radius:12px;background:var(--panel);margin:10px 0}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}.grid video,.grid img{width:100%;aspect-ratio:1;object-fit:cover;background:#111}
-.small{font-size:12px;color:var(--muted)}.filelabel{display:block;background:#263244;padding:13px;border-radius:11px;text-align:center;margin-top:10px;font-weight:bold}
+.small{font-size:12px;color:var(--muted)}
+.latestHeading{background:none;color:inherit;padding:0;text-align:left;width:100%}.latestHeading h2{display:flex;align-items:center;justify-content:space-between;margin:16px 0 12px}.dateChevron{font-size:25px;color:var(--muted);font-weight:400}
+.datePanel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}.datePanel input{color-scheme:dark}.dateButtons{display:flex;gap:9px}.dateButtons button{flex:1;margin-top:4px}
+.filelabel{display:block;background:#263244;padding:13px;border-radius:11px;text-align:center;margin-top:10px;font-weight:bold}
 @media(min-width:700px){nav{max-width:680px;left:50%;transform:translateX(-50%);border-left:1px solid var(--line);border-right:1px solid var(--line)}}
 </style>
 </head>
 <body>
-<header><div class="brand">RTI News</div><button class="bell" onclick="showTab('Notifications')" aria-label="Notifications">♧</button></header>
+<header><button class="bell" onclick="showTab('Notifications')" aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v18M3 6l3-3 3 3M3 18l3 3 3-3"/></svg></button><div class="brand">RTI News</div></header>
 <main id="app"></main>
 <nav>
-<button id="navHome" class="active" onclick="showTab('Home')">⌂<span>Home</span></button>
-<button id="navReels" onclick="showTab('Reels')">▷<span>Reels</span></button>
+<button id="navHome" class="active" onclick="showTab('Home')" aria-label="Home"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></button>
+<button id="navReels" onclick="showTab('Reels')" aria-label="Reels"><svg viewBox="0 0 24 24"><rect x="3" y="2" width="18" height="20" rx="5"/><path d="m10 8 6 4-6 4z"/></svg><span>Reels</span></button>
 <button class="plus" onclick="openCreate()" aria-label="Create">＋</button>
-<button id="navNotifications" onclick="showTab('Notifications')">♧<span>Alerts</span></button>
-<button id="navProfile" onclick="showTab('Profile')">◉<span>Profile</span></button>
+<button id="navProfile" onclick="showTab('Profile')" aria-label="Profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Profile</span></button>
 </nav>
 
 <div class="modal" id="createModal"><div class="sheet">
@@ -79,7 +81,20 @@ ${p.caption?`<div class="caption">${esc(p.caption)}</div>`:''}
 <div class="actions"><button class="action ${liked?'liked':''}" onclick="toggleLike('${p.id}')">${liked?'♥':'♡'} ${p.likes.length} Like</button><button class="action" onclick="openComments('${p.id}')">◯ ${p.comments.length} Comment</button></div></article>`}
 function render(){
 const root=document.getElementById('app'),p=state.profile,posts=state.posts;
-if(state.tab==='Home'){const list=posts.filter(x=>x.type==='post');root.innerHTML='<h2>Latest News</h2>'+(list.length?list.map(renderPost).join(''):empty('No posts yet','Be the first to share a news post.'));return;}
+if(state.tab==='Home'){
+const list=posts.filter(x=>x.type==='post');
+const selected=window.rtiSelectedDate||'';
+const filtered=selected?list.filter(x=>new Date(x.time).toISOString().slice(0,10)===selected):list;
+root.innerHTML=`<button class="latestHeading" onclick="toggleDatePicker()"><h2>Latest News <span class="dateChevron">⌄</span></h2></button>
+<div id="datePickerPanel" class="datePanel ${window.rtiDatePickerOpen?'':'hidden'}">
+<label for="newsDate" class="muted">Select date to view news</label>
+<input id="newsDate" type="date" max="${new Date().toISOString().slice(0,10)}" value="${selected}">
+<div class="dateButtons"><button class="primary" onclick="applyNewsDate()">Show News</button><button class="secondary" onclick="clearNewsDate()">Latest News</button></div>
+</div>
+${selected?`<p class="muted">News for ${new Date(selected+'T00:00:00').toLocaleDateString()}</p>`:''}
+${filtered.length?filtered.map(renderPost).join(''):empty(selected?'No news found for this date':'No posts yet',selected?'Try another date.':'Be the first to share a news post.')}`;
+return;
+}
 if(state.tab==='Reels'){const list=posts.filter(x=>x.type==='reel');root.innerHTML='<h2>Reels</h2>'+(list.length?list.map(renderPost).join(''):empty('No reels yet. Upload your first reel!','Your uploaded videos will appear here.'))+'<button class="primary" onclick="openCreate()">＋ Upload a Reel</button>';return;}
 if(state.tab==='Notifications'){root.innerHTML='<h2>Notifications</h2>'+(state.notifications.length?state.notifications.map(n=>`<div class="notice"><b>${esc(n.title)}</b><p>${esc(n.message)}</p><div class="small">${timeAgo(n.time)}</div></div>`).join(''):empty('No notifications yet','New activity will appear here.'));return;}
 if(state.tab==='Profile'){const mine=posts.filter(x=>x.owner==='me'),myPosts=mine.filter(x=>x.type==='post'),myReels=mine.filter(x=>x.type==='reel');root.innerHTML=`
@@ -96,6 +111,11 @@ function saveProfile(){state.profile.name=document.getElementById('nameInput').v
 function toggleLike(id){const p=state.posts.find(x=>x.id===id);if(!p)return;const i=p.likes.indexOf('me');if(i>=0)p.likes.splice(i,1);else{p.likes.push('me');if(p.owner!=='me')state.notifications.unshift({title:'New like',message:'Someone liked your post.',time:Date.now()});}save();render();}
 function openComments(id){commentPostId=id;const p=state.posts.find(x=>x.id===id);document.getElementById('commentList').innerHTML=p.comments.length?p.comments.map(c=>`<div class="notice"><b>${esc(c.name)}</b><p>${esc(c.text)}</p></div>`).join(''): '<p class="muted">No comments yet.</p>';document.getElementById('commentInput').value='';document.getElementById('commentModal').classList.add('show')}
 function addComment(){const text=document.getElementById('commentInput').value.trim();if(!text)return;const p=state.posts.find(x=>x.id===commentPostId);if(!p)return;p.comments.push({name:state.profile.name||'RTI News User',text});save();openComments(commentPostId);document.getElementById('commentInput').value='';}
+window.rtiSelectedDate='';
+window.rtiDatePickerOpen=false;
+function toggleDatePicker(){window.rtiDatePickerOpen=!window.rtiDatePickerOpen;render();}
+function applyNewsDate(){const value=document.getElementById('newsDate')?.value||'';if(!value)return alert('Please select a date first.');window.rtiSelectedDate=value;window.rtiDatePickerOpen=false;render();}
+function clearNewsDate(){window.rtiSelectedDate='';window.rtiDatePickerOpen=false;render();}
 load();render();
 </script>
 </body>
